@@ -1,5 +1,10 @@
 package com.microservices.demo.twitter.to.kafka.service;
 
+import com.microservices.demo.twitter.to.kafka.service.config.TwitterToKafkaServiceConfigData;
+
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +21,11 @@ import org.springframework.context.event.ContextStoppedEvent;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
+@RequiredArgsConstructor
 public class TwitterToKafkaServiceApplication implements CommandLineRunner, ApplicationListener {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TwitterToKafkaServiceApplication.class);
+
     public static void main(String[] args) {
         SpringApplication.run(TwitterToKafkaServiceApplication.class, args);
     }
@@ -29,7 +38,7 @@ public class TwitterToKafkaServiceApplication implements CommandLineRunner, Appl
      */
     @PostConstruct
     public void init() {
-        System.out.println("initialization logic here");
+        LOG.info("initialization logic here");
     }
 
     /**
@@ -42,7 +51,7 @@ public class TwitterToKafkaServiceApplication implements CommandLineRunner, Appl
      */
     @Override
     public void run(String... args) {
-        System.out.println("logic to be executed after application context is launched");
+        LOG.info("logic to be executed after application context is launched");
     }
 
     /**
@@ -56,21 +65,21 @@ public class TwitterToKafkaServiceApplication implements CommandLineRunner, Appl
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {
-            System.out.println("Context refreshed: do logic here" + ANSI_RESET);
+            LOG.info("Context refreshed: do logic here" + ANSI_RESET);
         } else if (event instanceof ApplicationStartedEvent) {
-            System.out.println(ANSI_GREEN + "Application started: do logic here" + ANSI_RESET);
+            LOG.info(ANSI_GREEN + "Application started: do logic here" + ANSI_RESET);
         } else if (event instanceof AvailabilityChangeEvent) {
-            System.out.println(ANSI_GREEN + "Availability change: do logic here" + ANSI_RESET);
+            LOG.info(ANSI_GREEN + "Availability change: do logic here" + ANSI_RESET);
         } else if (event instanceof ApplicationReadyEvent) {
-            System.out.println(ANSI_GREEN + "Application ready: do logic here" + ANSI_RESET);
+            LOG.info(ANSI_GREEN + "Application ready: do logic here" + ANSI_RESET);
         } else if (event instanceof ContextStartedEvent) {
-            System.out.println(ANSI_GREEN + "Context started: do logic here" + ANSI_RESET);
+            LOG.info(ANSI_GREEN + "Context started: do logic here" + ANSI_RESET);
         } else if (event instanceof ContextStoppedEvent) {
-            System.out.println(ANSI_GREEN + "Context stopped: do logic here" + ANSI_RESET);
+            LOG.info(ANSI_GREEN + "Context stopped: do logic here" + ANSI_RESET);
         } else if (event instanceof ContextClosedEvent) {
-            System.out.println(ANSI_GREEN + "Context closed: do logic here" + ANSI_RESET);
+            LOG.info(ANSI_GREEN + "Context closed: do logic here" + ANSI_RESET);
         } else {
-            System.out.println(ANSI_GREEN + "Unknown event type" + ANSI_RESET);
+            LOG.info(ANSI_GREEN + "Unknown event type" + ANSI_RESET);
         }
     }
 

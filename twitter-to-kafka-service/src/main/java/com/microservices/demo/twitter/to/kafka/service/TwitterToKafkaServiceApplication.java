@@ -1,9 +1,9 @@
 package com.microservices.demo.twitter.to.kafka.service;
 
 import com.microservices.demo.twitter.to.kafka.service.config.TwitterToKafkaServiceConfigData;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,11 +21,31 @@ import javax.annotation.PostConstruct;
 import java.util.Arrays;
 
 @SpringBootApplication
-@RequiredArgsConstructor
 public class TwitterToKafkaServiceApplication implements CommandLineRunner, ApplicationListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(TwitterToKafkaServiceApplication.class);
+
+    /**
+     * The configData dependency is being injected via the constructor.
+     * This is an example of constructor injection.<br><br>
+     *
+     * Pros:<br>
+     * - Encourages immutability: once dependencies are injected through the constructor, they can be made final and thus cannot be changed.<br>
+     * - Explicit dependencies: makes it clear what dependencies a class has, making code easier to understand and debug.<br>
+     * - Not framework dependent: constructor injection can be used without a dependency on Spring or any specific DI container.<br><br>
+     *
+     * Cons:<br>
+     * - More boilerplate code: need to write a constructor to receive the dependency.<br>
+     * - Could lead to large constructors: if a class has many dependencies, the constructor can become large and unwieldy.<br><br>
+     *
+     * Note: In this example, we're using Spring's @Autowired annotation on the constructor, which is optional from Spring 4.3 onwards.
+     */
     private final TwitterToKafkaServiceConfigData configData;
+
+    @Autowired
+    public TwitterToKafkaServiceApplication(TwitterToKafkaServiceConfigData configData) {
+        this.configData = configData;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(TwitterToKafkaServiceApplication.class, args);
@@ -54,6 +74,7 @@ public class TwitterToKafkaServiceApplication implements CommandLineRunner, Appl
     public void run(String... args) {
         LOG.info("logic to be executed after application context is launched");
         LOG.info(Arrays.toString(configData.getTwitterKeywords().toArray(new String[]{})));
+        LOG.info(configData.getWelcomeMessage());
     }
 
     /**

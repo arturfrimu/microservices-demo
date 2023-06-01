@@ -1,7 +1,6 @@
 package com.microservices.demo.twitter.to.kafka.service;
 
 import com.microservices.demo.twitter.to.kafka.service.config.TwitterToKafkaServiceConfigData;
-
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +18,14 @@ import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
 
 @SpringBootApplication
 @RequiredArgsConstructor
 public class TwitterToKafkaServiceApplication implements CommandLineRunner, ApplicationListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(TwitterToKafkaServiceApplication.class);
+    private final TwitterToKafkaServiceConfigData configData;
 
     public static void main(String[] args) {
         SpringApplication.run(TwitterToKafkaServiceApplication.class, args);
@@ -52,6 +53,7 @@ public class TwitterToKafkaServiceApplication implements CommandLineRunner, Appl
     @Override
     public void run(String... args) {
         LOG.info("logic to be executed after application context is launched");
+        LOG.info(Arrays.toString(configData.getTwitterKeywords().toArray(new String[]{})));
     }
 
     /**
@@ -65,25 +67,21 @@ public class TwitterToKafkaServiceApplication implements CommandLineRunner, Appl
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {
-            LOG.info("Context refreshed: do logic here" + ANSI_RESET);
+            LOG.info("Context refreshed: do logic here");
         } else if (event instanceof ApplicationStartedEvent) {
-            LOG.info(ANSI_GREEN + "Application started: do logic here" + ANSI_RESET);
+            LOG.info("Application started: do logic here");
         } else if (event instanceof AvailabilityChangeEvent) {
-            LOG.info(ANSI_GREEN + "Availability change: do logic here" + ANSI_RESET);
+            LOG.info("Availability change: do logic here");
         } else if (event instanceof ApplicationReadyEvent) {
-            LOG.info(ANSI_GREEN + "Application ready: do logic here" + ANSI_RESET);
+            LOG.info("Application ready: do logic here");
         } else if (event instanceof ContextStartedEvent) {
-            LOG.info(ANSI_GREEN + "Context started: do logic here" + ANSI_RESET);
+            LOG.info("Context started: do logic here");
         } else if (event instanceof ContextStoppedEvent) {
-            LOG.info(ANSI_GREEN + "Context stopped: do logic here" + ANSI_RESET);
+            LOG.info("Context stopped: do logic here");
         } else if (event instanceof ContextClosedEvent) {
-            LOG.info(ANSI_GREEN + "Context closed: do logic here" + ANSI_RESET);
+            LOG.info("Context closed: do logic here");
         } else {
-            LOG.info(ANSI_GREEN + "Unknown event type" + ANSI_RESET);
+            LOG.info("Unknown event type");
         }
     }
-
-    private static final String ANSI_GREEN = "\u001B[32m";
-    private static final String ANSI_RESET = "\u001B[0m";
-
 }

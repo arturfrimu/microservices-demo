@@ -1,6 +1,7 @@
 package com.microservices.demo.twitter.to.kafka.service;
 
 import com.microservices.demo.twitter.to.kafka.service.config.TwitterToKafkaServiceConfigData;
+import com.microservices.demo.twitter.to.kafka.service.runner.StreamRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.ContextStoppedEvent;
+import twitter4j.TwitterException;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -41,10 +43,12 @@ public class TwitterToKafkaServiceApplication implements CommandLineRunner, Appl
      * Note: In this example, we're using Spring's @Autowired annotation on the constructor, which is optional from Spring 4.3 onwards.
      */
     private final TwitterToKafkaServiceConfigData configData;
+    private final StreamRunner streamRunner;
 
     @Autowired
-    public TwitterToKafkaServiceApplication(TwitterToKafkaServiceConfigData configData) {
+    public TwitterToKafkaServiceApplication(TwitterToKafkaServiceConfigData configData, StreamRunner streamRunner) {
         this.configData = configData;
+        this.streamRunner = streamRunner;
     }
 
     public static void main(String[] args) {
@@ -71,10 +75,11 @@ public class TwitterToKafkaServiceApplication implements CommandLineRunner, Appl
      * @param args The command-line arguments
      */
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws TwitterException {
         LOG.info("logic to be executed after application context is launched");
         LOG.info(Arrays.toString(configData.getTwitterKeywords().toArray(new String[]{})));
         LOG.info(configData.getWelcomeMessage());
+        streamRunner.start();
     }
 
     /**
